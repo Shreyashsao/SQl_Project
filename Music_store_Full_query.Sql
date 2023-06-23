@@ -1,8 +1,8 @@
-/*	Question Set 1 - Easy */
+/* Analysis Problem Set (Easy) */
 
-/* Q1: Who is the senior most employee based on job title? */
+/* Q1: Find the senior-most employee based on job title? */
 
-SELECT title, last_name, first_name 
+SELECT first_name, last_name, title, levels
 FROM employee
 ORDER BY levels DESC
 LIMIT 1
@@ -10,10 +10,10 @@ LIMIT 1
 
 /* Q2: Which countries have the most Invoices? */
 
-SELECT COUNT(*) AS c, billing_country 
+SELECT billing_country, COUNT(*)
 FROM invoice
 GROUP BY billing_country
-ORDER BY c DESC
+ORDER BY count DESC
 
 
 /* Q3: What are top 3 values of total invoice? */
@@ -21,6 +21,7 @@ ORDER BY c DESC
 SELECT total 
 FROM invoice
 ORDER BY total DESC
+Limit 3
 
 
 /* Q4: Which city has the best customers? We would like to throw a promotional Music Festival in the city we made the most money. 
@@ -37,34 +38,36 @@ LIMIT 1;
 /* Q5: Who is the best customer? The customer who has spent the most money will be declared the best customer. 
 Write a query that returns the person who has spent the most money.*/
 
-SELECT customer.customer_id, first_name, last_name, SUM(total) AS total_spending
-FROM customer
-JOIN invoice ON customer.customer_id = invoice.customer_id
-GROUP BY customer.customer_id
-ORDER BY total_spending DESC
-LIMIT 1;
+Select customer.customer_id , customer.first_name, customer.last_name, SUM(invoice.total) as spent_money
+from invoice
+Inner join customer ON
+invoice.customer_id = customer.customer_id
+Group BY customer.customer_id
+Order by spent_money desc
+Limit 1
 
 
 
+/* Analysis Problem Set (Moderate) */
 
-/* Question Set 2 - Moderate */
-
-/* Q1: Write query to return the email, first name, last name, & Genre of all Rock Music listeners. 
+/* Q1: Write a query to return the email, first name, last name, & Genre of all Rock Music listeners. 
 Return your list ordered alphabetically by email starting with A. */
 
 /*Method 1 */
 
-SELECT DISTINCT email,first_name, last_name
-FROM customer
-JOIN invoice ON customer.customer_id = invoice.customer_id
-JOIN invoiceline ON invoice.invoice_id = invoiceline.invoice_id
+  Select customer.first_name, customer.last_name, customer.email
+FRom customer
+Inner join invoice ON 
+customer.customer_id = invoice.customer_id
+join invoice_line ON
+invoice_line.invoice_id= invoice.invoice_id
 WHERE track_id IN(
-	SELECT track_id FROM track
-	JOIN genre ON track.genre_id = genre.genre_id
-	WHERE genre.name LIKE 'Rock'
-)
-ORDER BY email;
-
+	Select track.track_id FROM track
+    join genre ON 
+    track.genre_id= genre.genre_id
+    WHERE genre.name like 'Rock'
+	)
+Order By email
 
 /* Method 2 */
 
@@ -105,7 +108,8 @@ ORDER BY miliseconds DESC;
 
 
 
-/* Question Set 3 - Advance */
+
+/* Question Set (Advance */
 
 /* Q1: Find how much amount spent by each customer on artists? Write a query to return customer name, artist name and total spent */
 
